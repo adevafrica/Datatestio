@@ -1,37 +1,32 @@
-name: Setup Project Folders
+name: Create Folder Structure
 
 on:
-  workflow_dispatch:   # Allows you to run manually
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   create-folders:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create folders
+      - name: Set up folders with .gitkeep
         run: |
-          mkdir -p src/components
-          mkdir -p src/pages
-          mkdir -p src/styles
-          mkdir -p public/assets
-          mkdir -p utils
-
-          # Add placeholder files so git tracks them
+          echo "Creating folder structure..."
+          mkdir -p public/assets src/components src/pages src/styles utils
+          touch public/assets/.gitkeep
           touch src/components/.gitkeep
           touch src/pages/.gitkeep
           touch src/styles/.gitkeep
-          touch public/assets/.gitkeep
           touch utils/.gitkeep
 
       - name: Commit and push changes
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add .
-          git commit -m "Create initial folder structure"
-          git push
+          git commit -m "Create initial folder structure" || echo "No changes to commit"
+          git push https://$GH_PAT@github.com/${{ github.repository }} HEAD:main
