@@ -1,0 +1,24 @@
+name: Setup Project Folders
+
+on:
+  push:
+    branches:
+      - main   # Trigger on push to main
+
+jobs:
+  create-folders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create project folders
+        run: |
+          mkdir -p src/components
+          mkdir -p src/pages
+          mkdir -p src/styles
+          mkdir -p public/assets
+          mkdir -p .github/workflows
+          mkdir -p utils
+          echo "Folders created successfully!"
+          
