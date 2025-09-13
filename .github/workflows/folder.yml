@@ -1,9 +1,10 @@
 name: Setup Project Folders
 
 on:
+  workflow_dispatch:   # Allows you to run manually
   push:
     branches:
-      - main   # Trigger on push to main
+      - main
 
 jobs:
   create-folders:
@@ -12,13 +13,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create project folders
+      - name: Create folders
         run: |
           mkdir -p src/components
           mkdir -p src/pages
           mkdir -p src/styles
           mkdir -p public/assets
-          mkdir -p .github/workflows
           mkdir -p utils
-          echo "Folders created successfully!"
-          
+
+          # Add placeholder files so git tracks them
+          touch src/components/.gitkeep
+          touch src/pages/.gitkeep
+          touch src/styles/.gitkeep
+          touch public/assets/.gitkeep
+          touch utils/.gitkeep
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git commit -m "Create initial folder structure"
+          git push
